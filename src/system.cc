@@ -33,7 +33,7 @@ void System::loadProgram(char* romPath){
 void System::fetchExecute() {
 
   // Fetch
-  unsigned short instruction = memory[pc] << 8 | memory[pc+1];
+  unsigned short instruction = memory[pc+1] << 8 | memory[pc];
   pc += 2;
 
   // Decode + execute
@@ -48,20 +48,48 @@ void System::fetchExecute() {
     case 0x0000:
       switch(instruction) {
         
-        case 0x00E0:    // CLS
+        case 0x00E0:    // CLS clear screen
 
           frameBuffer.clearScreen();
           break;
 
+        case 0x00EE:    // RET return
+
+          pc = stack[sp];
+          sp--;
+          break;
+        
       }
       break;
 
-    case 0x1000:        // Jump
+    case 0x1000:        // JP jump
 
       pc = NNN;
       break;
 
-    case 0x6000:        // Load Word
+    case 0x2000:        // CALL call function
+
+      sp++;
+      stack[sp] = pc;
+      pc = NNN;
+      break;
+
+    case 0x3000:        // SE conditional skip if equal
+
+      if(V[X] == NN) pc += 2;
+      break;
+
+    case 0x4000:        // SNE conditional skip if not equal
+
+      if(V[X] != NN) pc += 2;
+      break;
+
+    case 0x5000:        // SE conditional skip if equal
+
+      if(V[X] == V[Y]) pc += 2;
+      break;
+
+    case 0x6000:        // LD load word
     
       V[X] = NN;
       break;
@@ -69,6 +97,32 @@ void System::fetchExecute() {
     case 0x7000:        // Add
 
       V[X] += NN;
+      break;
+    
+    case 0x8000:
+      switch(N) {
+        
+        case 0x0000:    // LD set VX = VY
+
+          V[X] = V[Y];
+          break;
+
+        case 0x001:    // OR set VX OR VY
+          
+          V[X] &= V[Y];
+          break;
+
+        case 0x002:    // AND set VX AND VY
+          
+          V[X] &= V[Y];
+          break;
+        
+        case 0x003:    // XOR set VX XOR VY
+          
+          V[X] ^= V[Y];
+          break;
+
+      }
       break;
     
     case 0xA000:        // Set I
