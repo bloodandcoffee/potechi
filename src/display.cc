@@ -6,6 +6,8 @@ using namespace std;
 
 void FrameBuffer::drawScreen() {
 
+  cout << "--START OF FRAME--" << endl;
+
   // Dump frameBuffer to stdout
   // Temporary solution, replace with ncurses soon
   for(int i = 0; i < SCREEN_HEIGHT; i++) {
@@ -24,6 +26,8 @@ void FrameBuffer::drawScreen() {
 
     cout << "\n";
   }
+
+  cout << "--END OF FRAME--" << endl;
 }
 
 void FrameBuffer::clearScreen() {
@@ -55,7 +59,7 @@ bool FrameBuffer::setByte(unsigned char x, unsigned char y, unsigned char val) {
 
   // Do not go offscreen
   if(x + 8 >= SCREEN_WIDTH) {
-    //drawScreen();
+    drawScreen();
     return retVal;
   }
 
@@ -67,7 +71,7 @@ bool FrameBuffer::setByte(unsigned char x, unsigned char y, unsigned char val) {
 
   if(old & (old ^ frameBuffer[xCoord+1][y])) retVal = true;
 
-  //drawScreen();
+  drawScreen();
   return retVal;
 
 }

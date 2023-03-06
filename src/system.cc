@@ -41,7 +41,7 @@ void System::fetchExecute() {
   unsigned char Y = instruction & 0x00F0;
   unsigned char N = instruction & 0x000F;
   unsigned char NN = instruction & 0x00FF;
-  unsigned char NNN = instruction & 0x0FFF;
+  unsigned short NNN = instruction & 0x0FFF;
 
   switch(instruction & 0xF000) {
 
