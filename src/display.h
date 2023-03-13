@@ -8,10 +8,10 @@ class FrameBuffer {
 
   unsigned char frameBuffer[SCREEN_WIDTH / 8][SCREEN_HEIGHT];
 
-  void drawScreen();
 
   public:
   void clearScreen();
+  void drawScreen();
   bool setByte(unsigned char x, unsigned char y, unsigned char val);
 
 };

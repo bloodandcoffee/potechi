@@ -4,6 +4,7 @@
 
 using namespace std;
 
+// Debugging implementation
 void FrameBuffer::drawScreen() {
 
   cout << "--START OF FRAME--" << endl;
@@ -13,14 +14,14 @@ void FrameBuffer::drawScreen() {
   for(int i = 0; i < SCREEN_HEIGHT; i++) {
     for(int j = 0; j < SCREEN_WIDTH / 8; j++) {
 
-      cout << ((frameBuffer[j][i] >> 7 & 0xF) ? "█" : " ");
-      cout << ((frameBuffer[j][i] >> 6 & 0xF) ? "█" : " ");
-      cout << ((frameBuffer[j][i] >> 5 & 0xF) ? "█" : " ");
-      cout << ((frameBuffer[j][i] >> 4 & 0xF) ? "█" : " ");
-      cout << ((frameBuffer[j][i] >> 3 & 0xF) ? "█" : " ");
-      cout << ((frameBuffer[j][i] >> 2 & 0xF) ? "█" : " ");
-      cout << ((frameBuffer[j][i] >> 1 & 0xF) ? "█" : " ");
-      cout << ((frameBuffer[j][i] >> 0 & 0xF) ? "█" : " ");
+      cout << ((frameBuffer[j][i] >> 7 & 0x1) ? "██" : "  ");
+      cout << ((frameBuffer[j][i] >> 6 & 0x1) ? "██" : "  ");
+      cout << ((frameBuffer[j][i] >> 5 & 0x1) ? "██" : "  ");
+      cout << ((frameBuffer[j][i] >> 4 & 0x1) ? "██" : "  ");
+      cout << ((frameBuffer[j][i] >> 3 & 0x1) ? "██" : "  ");
+      cout << ((frameBuffer[j][i] >> 2 & 0x1) ? "██" : "  ");
+      cout << ((frameBuffer[j][i] >> 1 & 0x1) ? "██" : "  ");
+      cout << ((frameBuffer[j][i] >> 0 & 0x1) ? "██" : "  ");
 
     }
 
@@ -45,33 +46,27 @@ bool FrameBuffer::setByte(unsigned char x, unsigned char y, unsigned char val) {
 
   bool retVal = false;
 
-  const unsigned char xCoord = x / 8;
   unsigned char old;
+  const unsigned char xCoord = x / 8;
+
+  const unsigned char leftHalf = val >> (x % 8);
+  const unsigned char rightHalf = val << (8 - (x % 8));
 
   // Draw left half
-  const unsigned char offsetLeft = x % 8;
-
-  old = frameBuffer[xCoord][y] >> offsetLeft;
-  frameBuffer[xCoord][y] = old ^ val >> offsetLeft;
+  old = frameBuffer[xCoord][y];
+  frameBuffer[xCoord][y] = old ^ leftHalf;
 
   if(old & (old ^ frameBuffer[xCoord][y])) retVal = true;
 
-
   // Do not go offscreen
-  if(x + 8 >= SCREEN_WIDTH) {
-    drawScreen();
-    return retVal;
-  }
+  if(x + 8 >= SCREEN_WIDTH) return retVal;
 
   // Draw right half
-  const unsigned char offsetRight = 16 - (x % 8);
-
-  old = frameBuffer[xCoord+1][y] << offsetRight;
-  frameBuffer[xCoord+1][y] = old ^ val << offsetRight;
+  old = frameBuffer[xCoord+1][y];
+  frameBuffer[xCoord+1][y] = rightHalf;
 
   if(old & (old ^ frameBuffer[xCoord+1][y])) retVal = true;
 
-  drawScreen();
   return retVal;
 
 }

@@ -11,6 +11,7 @@ void System::loadProgram(char* romPath){
   sp = 0;       // Stack pointer to stack frame 0 (stack[0])
 
   memset(memory, 0, 0x1000);
+  frameBuffer.clearScreen();
 
   // Opens a filestream
   ifstream romFile(romPath, ios::in | ios::binary);
@@ -18,12 +19,11 @@ void System::loadProgram(char* romPath){
   if(romFile.is_open()){
     unsigned short i = pc;
 
-    while(romFile >> noskipws >> memory[i+1]) {
+    while(romFile >> noskipws >> memory[i]) {
 
-      romFile >> noskipws >> memory[i];
-      i += 2;
+      i++;
       if(i >= 0x1000) break;
-      
+
     }
   }
 
@@ -33,12 +33,12 @@ void System::loadProgram(char* romPath){
 void System::fetchExecute() {
 
   // Fetch
-  unsigned short instruction = memory[pc+1] << 8 | memory[pc];
+  unsigned short instruction = memory[pc] << 8 | memory[pc+1];
   pc += 2;
 
   // Decode + execute
-  unsigned char X = instruction & 0x0F00;
-  unsigned char Y = instruction & 0x00F0;
+  unsigned char X = (instruction & 0x0F00) >> 8;
+  unsigned char Y = (instruction & 0x00F0) >> 4;
   unsigned char N = instruction & 0x000F;
   unsigned char NN = instruction & 0x00FF;
   unsigned short NNN = instruction & 0x0FFF;
@@ -138,16 +138,18 @@ void System::fetchExecute() {
         
         V[0xF] = 0;
 
-        // Draw srpite
+        // Draw sprite
         for(int i = 0; i < N; i++) {
           
           if(yCoord + i >= SCREEN_HEIGHT) break;
-          
+
           V[0xF] += frameBuffer.setByte(xCoord, yCoord + i, memory[I + i]);
 
         }
 
         V[0xF] = V[0xF] ? 1 : 0;      // Set VF properly
+        
+        frameBuffer.drawScreen();
         break;
 
       }
