@@ -1,6 +1,7 @@
 #include <fstream>
-#include <string.h>
 #include <iostream>
+#include <string.h>
+#include <limits.h>
 #include "system.h"
 
 using namespace std;
@@ -94,7 +95,7 @@ void System::fetchExecute() {
       V[X] = NN;
       break;
     
-    case 0x7000:        // Add
+    case 0x7000:        // ADD
 
       V[X] += NN;
       break;
@@ -121,8 +122,43 @@ void System::fetchExecute() {
           
           V[X] ^= V[Y];
           break;
+        
+        case 0x004:    // ADD set VX + VY, VF = carry
+          
+          V[0xF] = (((int)V[X] + (int)V[Y]) / 256) ? 1 : 0;
+          V[X] += V[Y];
+          break;
+        
+        case 0x005:    // SUB set VX - VY, VF = NOT borrow
+          
+          V[0xF] = (V[X] > V[Y]) ? 1 : 0;
+          V[X] -= V[Y];
+          break;
+        
+        case 0x006:    // SHR set VF to the least significant bit of VX, then set VX /= 2
+          
+          V[0xF] = (V[X] & 1) ? 1 : 0;
+          V[X] /= 2;
+          break;
+        
+        case 0x007:    // SUBN set VX - VY, VF = NOT borrow
+          
+          V[0xF] = (V[X] < V[Y]) ? 1 : 0;
+          V[X] -= V[Y];
+          break;
+        
+        case 0x00E:    // SHR set VF to the least significant bit of VX, then set VX *= 2
+          
+          V[0xF] = (V[X] & 128) ? 1 : 0;
+          V[X] *= 2;
+          break;
 
       }
+      break;
+
+    case 0x9000:        // SNE skip the next instruction if VX != VY
+
+      if(V[X] != V[Y]) pc += 2;
       break;
     
     case 0xA000:        // Set I
@@ -130,7 +166,17 @@ void System::fetchExecute() {
       I = NNN;
       break;
 
-    case 0xD000:        // Display
+    case 0xB000:        // JP jump to NNN + V0
+
+      pc = NNN + V[0];
+      break;
+
+    case 0xC000:        // RND set V[X] to random uchar AND NN
+
+      V[X] = NN; // TODO: CALL RNG LATER
+      break;
+
+    case 0xD000:        // DRW draw sprite to screen
       {
         
         unsigned char xCoord = V[X] % SCREEN_WIDTH;
