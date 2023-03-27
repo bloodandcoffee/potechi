@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "system.h"
 
 using namespace std;
@@ -12,7 +13,18 @@ int main(int argc, char** argv) {
 
   System potechi(argv[1]);
 
+  chrono::duration<double, std::ratio<1, 60>> lastTime(chrono::system_clock::now().time_since_epoch());
+
   while(true) {
+
+    chrono::duration<double, std::ratio<1, 60>> now(chrono::system_clock::now().time_since_epoch());
+    
+    if((now - lastTime).count() >= 1) {
+      potechi.delay--;
+      potechi.sound--;
+
+      lastTime = now;
+    }
 
     potechi.fetchExecute();
 

@@ -269,7 +269,7 @@ void System::fetchExecute() {
 
         case 0x29:        // LD set I = location of sprite for digit VX
 
-          // Implement digits later
+          I = X * 5;
           break;
 
         case 0x33:        // LD store the binary-coded decimal value of VX starting at memory[I]
@@ -291,7 +291,7 @@ void System::fetchExecute() {
     
         default:
 
-          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+          cerr << "Unknown in2truction encountered: " << std::hex << instruction << endl;
           break;
 
       }
