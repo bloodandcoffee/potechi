@@ -8,7 +8,6 @@ class FrameBuffer {
 
   unsigned char frameBuffer[SCREEN_WIDTH / 8][SCREEN_HEIGHT];
 
-
   public:
   void clearScreen();
   void drawScreen();

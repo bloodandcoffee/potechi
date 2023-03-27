@@ -10,11 +10,12 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  System potechi;
-  potechi.loadProgram(argv[1]);
+  System potechi(argv[1]);
 
   while(true) {
+
     potechi.fetchExecute();
+
   }
 
   return 0;

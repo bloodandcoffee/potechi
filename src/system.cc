@@ -1,12 +1,15 @@
 #include <fstream>
 #include <iostream>
+#include <chrono>
 #include <string.h>
 #include <limits.h>
 #include "system.h"
 
 using namespace std;
 
-void System::loadProgram(char* romPath){
+System::System (char* romPath){
+
+  // Reset registers
   pc = 0x200;   // Program Counter to 0x200 (start of userspace)
   I = 0;        // General purpose memory pointer to 0 (initialize value)
   sp = 0;       // Stack pointer to stack frame 0 (stack[0])
@@ -14,7 +17,8 @@ void System::loadProgram(char* romPath){
   memset(memory, 0, 0x1000);
   frameBuffer.clearScreen();
 
-  // Opens a filestream
+
+  // Loads ROM
   ifstream romFile(romPath, ios::in | ios::binary);
 
   if(romFile.is_open()){
@@ -27,6 +31,23 @@ void System::loadProgram(char* romPath){
 
     }
   }
+
+  // Initialize RNG
+  rng = mt19937(chrono::system_clock::now().time_since_epoch().count());
+
+}
+
+
+unsigned char System::rand() {
+
+  return (unsigned char)(rng() % 256);
+
+}
+
+
+void System::drawScreen() {
+
+  frameBuffer.drawScreen();
 
 }
 
@@ -173,7 +194,7 @@ void System::fetchExecute() {
 
     case 0xC000:        // RND set V[X] to random uchar AND NN
 
-      V[X] = NN; // TODO: CALL RNG LATER
+      V[X] = rand() & NN;
       break;
 
     case 0xD000:        // DRW draw sprite to screen

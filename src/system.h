@@ -1,5 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
+#include <random>
 
 #include "display.h"
 
@@ -18,11 +19,17 @@ class System {
   unsigned short stack[16];
   unsigned char sp;
 
-  public:
+  
   FrameBuffer frameBuffer;
+  mt19937 rng;
 
-  void loadProgram(char* romPath);
+  unsigned char rand();
+
+  public:
+  System(char* romPath);
+
   void fetchExecute();
+  void drawScreen();
 
 };
 
