@@ -291,7 +291,7 @@ void System::fetchExecute() {
     
         default:
 
-          cerr << "Unknown in2truction encountered: " << std::hex << instruction << endl;
+          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
           break;
 
       }
