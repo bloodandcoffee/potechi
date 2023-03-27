@@ -19,7 +19,7 @@ class System {
   unsigned short stack[16];
   unsigned char sp;
 
-  
+
   FrameBuffer frameBuffer;
   mt19937 rng;
 
@@ -29,7 +29,6 @@ class System {
   System(char* romPath);
 
   void fetchExecute();
-  void drawScreen();
 
 };
 

@@ -14,6 +14,8 @@ System::System (char* romPath){
   I = 0;        // General purpose memory pointer to 0 (initialize value)
   sp = 0;       // Stack pointer to stack frame 0 (stack[0])
 
+  delay = 0, sound = 0;
+
   memset(memory, 0, 0x1000);
   frameBuffer.clearScreen();
 
@@ -45,13 +47,6 @@ unsigned char System::rand() {
 }
 
 
-void System::drawScreen() {
-
-  frameBuffer.drawScreen();
-
-}
-
-
 void System::fetchExecute() {
 
   // Fetch
@@ -79,6 +74,11 @@ void System::fetchExecute() {
 
           pc = stack[sp];
           sp--;
+          break;
+
+        default:
+
+          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
           break;
         
       }
@@ -173,6 +173,11 @@ void System::fetchExecute() {
           V[0xF] = (V[X] & 128) ? 1 : 0;
           V[X] *= 2;
           break;
+    
+        default:
+
+          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+          break;
 
       }
       break;
@@ -220,10 +225,80 @@ void System::fetchExecute() {
         break;
 
       }
+
+    case 0xE000:
+      switch(NN) {
+
+        case 0x9E:        // SKP skips next instruction if VX is pressed
+          // IMPLEMENT KBD LATER
+          break;
+        
+        case 0xA1:        // SPNP skips next instruction if VX is not pressed
+          // IMPLEMENT KBD LATER 
+          break;
+
+        default:
+          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+          break;
+
+      }
+      break;
+
+    case 0xF000:
+      switch(NN) {
+
+        case 0x0A:        // LD wait for a keypress, and store keyval in VX (blocking)
+
+          // Implement keys later
+          break;
+
+        case 0x15:        // LD set delay timer to VX
+
+          delay = V[X];
+          break;
+
+        case 0x18:        // LD set sound timer to VX
+
+          sound = V[X];
+          break;
+
+        case 0x1E:        // ADD set I = I + VX
+
+          I += V[X];
+          break;
+
+        case 0x29:        // LD set I = location of sprite for digit VX
+
+          // Implement digits later
+          break;
+
+        case 0x33:        // LD store the binary-coded decimal value of VX starting at memory[I]
+
+          memory[I] = V[X] / 100;
+          memory[I+1] = (V[X] / 10) % 10;
+          memory[I+2] = V[X] / 100 % 10;
+          break;
+
+        case 0x55:        // LD store V0 to VX (inclusive) to memory, starting at memory[I]
+
+          for(int i = 0; i <= X; i++) memory[I+i] = V[i];
+          break;
+
+        case 0x65:        // LD read V0 to VX (inclusive) from memory, starting at memory[I]
+
+          for(int i = 0; i <= X; i++) V[i] = memory[I+i];
+          break;
+    
+        default:
+
+          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+          break;
+
+      }
     
     default:
 
-      cerr << "Unimplemented instruction encountered: " << std::hex << instruction << endl;
+      cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
       break;
 
   }
