@@ -2,7 +2,7 @@
 #define SYSTEM_H
 #include <random>
 
-#include "display.h"
+#include "framebuffer.h"
 
 class System {
 

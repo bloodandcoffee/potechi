@@ -1,34 +1,33 @@
-#include <string.h>
 #include <iostream>
-#include "display.h"
+#include <string.h>
+#include <ncurses.h>
+#include "framebuffer.h"
 
 using namespace std;
 
 // Debugging implementation
 void FrameBuffer::drawScreen() {
 
-  cout << "--START OF FRAME--" << endl;
-
-  // Dump frameBuffer to stdout
-  // Temporary solution, replace with ncurses soon
   for(int i = 0; i < SCREEN_HEIGHT; i++) {
-    for(int j = 0; j < SCREEN_WIDTH / 8; j++) {
+    for(int j = 0; j < (SCREEN_WIDTH / 8); j++) {
 
-      cout << ((frameBuffer[j][i] >> 7 & 0x1) ? "██" : "  ");
-      cout << ((frameBuffer[j][i] >> 6 & 0x1) ? "██" : "  ");
-      cout << ((frameBuffer[j][i] >> 5 & 0x1) ? "██" : "  ");
-      cout << ((frameBuffer[j][i] >> 4 & 0x1) ? "██" : "  ");
-      cout << ((frameBuffer[j][i] >> 3 & 0x1) ? "██" : "  ");
-      cout << ((frameBuffer[j][i] >> 2 & 0x1) ? "██" : "  ");
-      cout << ((frameBuffer[j][i] >> 1 & 0x1) ? "██" : "  ");
-      cout << ((frameBuffer[j][i] >> 0 & 0x1) ? "██" : "  ");
+      for(int h = 0; h < 8; h++) {
+
+        if(frameBuffer[j][i] >> (7 - h) & 0x1) {
+          mvaddch(i+1, 2*(j*8 + h) + 1, (char)219);
+          mvaddch(i+1, 2*(j*8 + h) + 2, (char)219);
+        } else {
+          mvaddch(i+1, 2*(j*8 + h) + 1, (char)32);
+          mvaddch(i+1, 2*(j*8 + h) + 2, (char)32);
+        }
+        
+      }
 
     }
-
-    cout << "\n";
   }
 
-  cout << "--END OF FRAME--" << endl;
+  refresh();
+
 }
 
 void FrameBuffer::clearScreen() {
