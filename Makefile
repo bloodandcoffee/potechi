@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-std=c++23 -Wall -MMD -O2 -mtune=znver3
+CXXFLAGS=-std=c++20 -Wall -MMD -O2 -mtune=native
 EXEC=bin/potechi
 OBJECTS=src/potechi.o src/system.o src/framebuffer.o
 INCLUDEFLAGS=-lncurses

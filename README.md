@@ -10,20 +10,30 @@ CHIP-8 Emulator
 
 **potechi** (potato chip) is a CHIP-8 emulator
 
+### USAGE
+
+    potechi /path/to/rom.ch8
+
 ### DEPENDENCIES
 
 - ncurses
 
 ### INSTALLING
 
-Compile:
+Compile
 
     make
 
-Install:
+Install
 
     make install
 
-Uninstall:
+Uninstall
 
     make remove
+
+### TODO
+
+- [ ] Implement keyboard input
+- [ ] Implement sound
+
