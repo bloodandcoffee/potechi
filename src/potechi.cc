@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
 
   // Fetch-decode-execute loop
   chrono::duration<double, std::ratio<1, 60>> lastTime(chrono::system_clock::now().time_since_epoch());
+  chrono::duration<double, std::ratio<1, 60>> lastKeyboardFlush(chrono::system_clock::now().time_since_epoch());
 
   while(true) {
 
@@ -45,6 +46,13 @@ int main(int argc, char** argv) {
       potechi.sound--;
 
       lastTime = now;
+    }
+
+    if((now - lastKeyboardFlush).count() >= 15) {
+
+      flushinp();
+      lastKeyboardFlush = now;
+
     }
 
     potechi.fetchExecute();

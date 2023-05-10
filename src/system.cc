@@ -232,12 +232,12 @@ void System::fetchExecute() {
 
         case 0x9E:        // SKP skips next instruction if VX is pressed
           
-          if(ch8_kbhit(V[X])) pc += 2;
+          if(ch8_keypressed(V[X])) pc += 2;
           break;
         
         case 0xA1:        // SKNP skips next instruction if VX is not pressed
           
-          if(!ch8_kbhit(V[X])) pc += 2;
+          if(!ch8_keypressed(V[X])) pc += 2;
           break;
 
         default:

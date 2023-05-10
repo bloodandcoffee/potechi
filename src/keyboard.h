@@ -2,9 +2,10 @@
 #define KEYBOARD_H
 #include <string>
 
-const string keymap = "x123qweasdzc4rfv";
+const std::string keymap = "x123qweasdzc4rfv";
 
+// c is the CHIP-8 virtual keyboard key to check for (0x0-0xF)
+bool ch8_keypressed(unsigned char c);
 unsigned char ch8_getch_blocking();
-bool ch8_kbhit(char c);
 
 #endif

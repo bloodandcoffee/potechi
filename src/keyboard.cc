@@ -23,8 +23,17 @@ unsigned char ch8_getch_blocking() {
 
 }
 
-bool ch8_kbhit(char c) {
+bool ch8_keypressed(unsigned char c) {
 
+  int keyval = 0;
   
+  while(keyval != ERR) {
+
+    keyval = getch();
+    if(keymap.find(keyval) == (int)c) return true;
+
+  }
+
+  return false;
 
 }
