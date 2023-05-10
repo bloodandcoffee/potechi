@@ -4,6 +4,7 @@
 #include <string.h>
 #include <limits.h>
 #include "system.h"
+#include "keyboard.h"
 
 using namespace std;
 
@@ -230,11 +231,13 @@ void System::fetchExecute() {
       switch(NN) {
 
         case 0x9E:        // SKP skips next instruction if VX is pressed
-          // IMPLEMENT KBD LATER
+          
+          if(ch8_kbhit(V[X])) pc += 2;
           break;
         
-        case 0xA1:        // SPNP skips next instruction if VX is not pressed
-          // IMPLEMENT KBD LATER 
+        case 0xA1:        // SKNP skips next instruction if VX is not pressed
+          
+          if(!ch8_kbhit(V[X])) pc += 2;
           break;
 
         default:
@@ -249,7 +252,7 @@ void System::fetchExecute() {
 
         case 0x0A:        // LD wait for a keypress, and store keyval in VX (blocking)
 
-          // Implement keys later
+          V[X] = ch8_getch_blocking();
           break;
 
         case 0x15:        // LD set delay timer to VX

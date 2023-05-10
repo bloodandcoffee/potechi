@@ -1,6 +1,6 @@
 #include <iostream>
 #include <chrono>
-#include <ncurses.h>
+#include <curses.h>
 #include "system.h"
 #include "framebuffer.h"
 

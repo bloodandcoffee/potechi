@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string.h>
-#include <ncurses.h>
+#include <curses.h>
 #include "framebuffer.h"
 
 using namespace std;
