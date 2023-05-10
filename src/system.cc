@@ -79,7 +79,7 @@ void System::fetchExecute() {
 
         default:
 
-          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+          cerr << "Unknown instruction encountered in 0 block: " << std::hex << instruction << endl;
           break;
         
       }
@@ -132,7 +132,7 @@ void System::fetchExecute() {
 
         case 0x001:    // OR set VX OR VY
           
-          V[X] &= V[Y];
+          V[X] |= V[Y];
           break;
 
         case 0x002:    // AND set VX AND VY
@@ -177,7 +177,7 @@ void System::fetchExecute() {
     
         default:
 
-          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+          cerr << "Unknown instruction encountered in 8 block: " << std::hex << instruction << endl;
           break;
 
       }
@@ -241,7 +241,7 @@ void System::fetchExecute() {
           break;
 
         default:
-          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+          cerr << "Unknown instruction encountered in E block: " << std::hex << instruction << endl;
           break;
 
       }
@@ -279,7 +279,7 @@ void System::fetchExecute() {
 
           memory[I] = V[X] / 100;
           memory[I+1] = (V[X] / 10) % 10;
-          memory[I+2] = V[X] / 100 % 10;
+          memory[I+2] = V[X] % 10;
           break;
 
         case 0x55:        // LD store V0 to VX (inclusive) to memory, starting at memory[I]
@@ -294,14 +294,14 @@ void System::fetchExecute() {
     
         default:
 
-          cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+          cerr << "Unknown instruction encountered in F block: " << std::hex << instruction << endl;
           break;
 
       }
     
     default:
 
-      cerr << "Unknown instruction encountered: " << std::hex << instruction << endl;
+      cerr << "Unknown instruction encountered in main block: " << std::hex << instruction << endl;
       break;
 
   }
