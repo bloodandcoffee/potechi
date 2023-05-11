@@ -34,6 +34,6 @@ Uninstall
 
 ### TODO
 
-- [ ] Implement keyboard input
 - [ ] Implement sound
+- [ ] Implement extended CH8 instructions
 
