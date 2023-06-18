@@ -1,6 +1,6 @@
 <div align="center">
 
-#  ポテチ potechi
+# ポテチ potechi
 
 **potechi** (potato chip) is a CHIP-8 emulator
 
